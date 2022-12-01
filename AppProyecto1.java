@@ -43,7 +43,6 @@ public class AppProyecto1 {
         //     JOptionPane.showMessageDialog(null, "Error de escritura");
         // }
         
-        // --------------------------------------------------------------------------------------------------
 
         //paso 1.- cargamos el archivo de productos
         try {
