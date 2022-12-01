@@ -22,9 +22,7 @@ public class AppProyecto1 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-        // creamos productos previo a la ejecución real para así tener una base con --------------------------
-        // la que trabajar por si el usuario no ingresa productos---------------------------------------------
-
+        // creamos productos previo a la ejecución real-----------------
         ArrayList<Producto> lista = new ArrayList<>();
         // int seguir = JOptionPane.showConfirmDialog(null, "Desea ingresar un producto");
         // while(seguir==0) {
@@ -42,10 +40,9 @@ public class AppProyecto1 {
         // } catch (IOException e) {
         //     JOptionPane.showMessageDialog(null, "Error de escritura");
         // }
-        
-        // --------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------
 
-        //paso 1.- cargamos el archivo de productos
+        //cargamos el archivo de productos
         try {
             lista = new AppProyecto1().cargarProductos();
         } catch(IOException e) {
@@ -54,16 +51,16 @@ public class AppProyecto1 {
             JOptionPane.showMessageDialog(null, "Clases no compatibles");
         }
 
-        //paso 2.- el usuario se identifica con sus datos personales
+        for(Producto prod:lista) {
+            System.out.println(prod.toString());
+        }
+        //leemos los productos que tengamos hasta ahora
+        //el usuario se identifica con sus datos personales
         
 
-
-        //borramos el archivo y lo volvemos a escribir por si el usuario añadió un nuevo producto
-        File archivo = new File("productos.dat");
-        archivo.delete();
 	}
 
-    //este método nos sirve para crear un producto (noten que regresa un objeto producto)
+    //creamos un prodcuto
     public Producto crearProducto() throws IOException {
 
         //leer datos del teclado y esciribilos al archivo
@@ -86,7 +83,7 @@ public class AppProyecto1 {
                 Integer.parseInt(txtStockF.getText()));
     }
 
-    //cargamos la lista con productos que previamente va estar llena así es como los datos son persistentes
+    //cargamos la lista con productos
     public ArrayList<Producto> cargarProductos() throws IOException, ClassNotFoundException {
         ObjectInputStream dis = new ObjectInputStream(new FileInputStream(new File("productos.dat")));
         
@@ -106,7 +103,7 @@ public class AppProyecto1 {
         return lista;
     }
 
-    //este método nos servirá para exportar la lista con productos
+    //exportamos la lista con productos
     public void exportarProductos(ArrayList<Producto> lista) throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("productos.dat")));
 

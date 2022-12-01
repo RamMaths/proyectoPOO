@@ -1,8 +1,11 @@
 package proyectoPOO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-public class Producto {
-    private String id;
+
+public class Producto implements Serializable {
+    private static final long serialVersionUID = 1L;
+	private String id;
     private String descripcion;
     private int stockInicial;
     private int stockFinal;
@@ -50,7 +53,7 @@ public class Producto {
 
     @Override
     public String toString() {
-        return "Id: " + id + "\nDescripción: " + "\nstockInicial: " + stockInicial + "\stockFinal: " + stockFinal;
+        return "Id: " + id + "\nDescripción: " + descripcion + "\nstockInicial: " + stockInicial + "\nstockFinal: " + stockFinal;
     }
 
 }
