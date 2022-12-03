@@ -5,10 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.io.EOFException;
 
 import javax.swing.JLabel;
@@ -43,6 +40,7 @@ public class AppProyecto1 {
         //     JOptionPane.showMessageDialog(null, "Error de escritura");
         // }
         
+        // --------------------------------------------------------------------------------------------------
 
         //paso 1.- cargamos el archivo de productos
         try {
@@ -54,12 +52,29 @@ public class AppProyecto1 {
         }
 
         //paso 2.- el usuario se identifica con sus datos personales
+
+        while(true) {
+            String nombre = JOptionPane.showInputDialog(null, "Identificate\nIngresa tu nombre");
+            String clave = JOptionPane.showInputDialog(null, "Ingresa tu clave");
+
+            //este es un ejemplo del usuario administrador lo podemos sacar de un objeto empleado ya que los hayamos creado
+            if(!nombre.equals("Pedro") || !clave.equals("123")) {
+                JOptionPane.showMessageDialog(null, "Usuario no reconocido, porfavor ingrese los datos nuevamente");
+            }else {
+                break;
+            }
+        }
         
 
 
         //borramos el archivo y lo volvemos a escribir por si el usuario añadió un nuevo producto
         File archivo = new File("productos.dat");
         archivo.delete();
+        try {
+            new AppProyecto1().exportarProductos(lista);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error de escritura");
+        }
 	}
 
     //este método nos sirve para crear un producto (noten que regresa un objeto producto)
