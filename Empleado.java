@@ -1,10 +1,12 @@
 package proyectoPOO;
 
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Empleado {
+public class Empleado implements Serializable {
 
-    public String curp;
+    private static final long serialVersionUID = 1L;
+	public String curp;
     public String nombre;
     public String apellido; 
     public String clave;
