@@ -1,139 +1,64 @@
 package proyectoPOO;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.EOFException;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-public class AppProyecto1 {
+public class AppCrearArchivos {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-        // creamos productos previo a la ejecución real para así tener una base con --------------------------
-        // la que trabajar por si el usuario no ingresa productos---------------------------------------------
-
         HashMap<String, Producto> productos = new HashMap<>();
+
+        int seguir = JOptionPane.showConfirmDialog(null, "Desea ingresar un producto");
+        while(seguir==0) {
+            try{
+                Producto prod = new AppCrearArchivos().crearProducto();
+                productos.put(prod.getDescripcion(), prod);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "No se pudo crear el producto");
+            }
+
+            seguir = JOptionPane.showConfirmDialog(null, "Desea ingresar otro producto");
+        }
+
+        try {
+            new AppCrearArchivos().exportarProductos(productos);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error de escritura");
+        }
+
+
         HashMap<String, Empleado> empleados = new HashMap<>();
 
-        //paso 1.- cargamos el archivo de productos y el archivo de empleados
-
-        try {
-            productos = new AppProyecto1().cargarProductos();
-        } catch(IOException e) {
-            JOptionPane.showMessageDialog(null, "Error de lectura");
-        } catch(ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, "Clases no compatibles");
-        }
-
-        try {
-            empleados = new AppProyecto1().cargarEmpleados();
-        } catch(IOException e) {
-            JOptionPane.showMessageDialog(null, "Error de lectura");
-        } catch(ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, "Clases no compatibles");
-        }
-
-        empleados.forEach((key, value) -> System.out.println(value.toString()));
-
-        //paso 2.- el usuario se identifica con sus datos personales
-        //
-        String nombre = "";
-        String clave = "";
-
-        while(true) {
-            nombre = JOptionPane.showInputDialog(null, "Identificate\nIngresa tu nombre");
-            clave = JOptionPane.showInputDialog(null, "Ingresa tu clave");
-
-            //este es un ejemplo del usuario administrador lo podemos sacar de un objeto empleado ya que los hayamos creado
-            if(empleados.get(nombre)!=null && empleados.get(nombre).getClave().equals(clave)) {
-                break;
-            }else {
-                JOptionPane.showMessageDialog(null, "Usuario no reconocido, porfavor ingrese los datos nuevamente");
-            }
-        }
-
-        
-
-        ArrayList<String> nombres = new ArrayList<>();
-        
-        productos.forEach((key, value) -> nombres.add(key));
-
-        Object[] nombresA = nombres.toArray();
-
-
-        ArrayList<Movimiento> movimientos = new ArrayList<>();
-        int seguir = JOptionPane.showConfirmDialog(null, "Desea hacer un nuevo movimiento");
+        seguir = JOptionPane.showConfirmDialog(null, "Desea ingresar un empleado");
         while(seguir==0) {
-
-            //paso 3.-el usuario elige, en un menú que muestra todos los productos creados
-            String opc = (String)JOptionPane.showInputDialog(
-                null,
-                "Selecciona una opcion",
-                "Tipo de figura",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                nombresA,
-                nombresA[0]);
-
-            //paso 4.- ventana donde puede ingresar datos para crear un objeto Movimiento 
-            try {
-                movimientos.add(new AppProyecto1().crearMovimiento(productos.get(opc), empleados.get(nombre)));
+            try{
+                Empleado emp = new AppProyecto1().crearEmpleado();
+                empleados.put(emp.getNombre(), emp);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "No se pudo crear el movimiento");
+                JOptionPane.showMessageDialog(null, "No se pudo crear el empleado");
             }
 
-            seguir = JOptionPane.showConfirmDialog(null, "Desea hacer un nuevo movimiento");
+            seguir = JOptionPane.showConfirmDialog(null, "Desea ingresar otro empleado");
+        }
+
+        try {
+            new AppProyecto1().exportarEmpleados(empleados);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error de escritura");
         }
         
-        //paso 5.- checar que tipo de movimiento es y así añadirlos a las existencias o restarlos
-        for(Movimiento mov : movimientos) {
-        	if(mov.getTipo().equals("Ingreso")) {
-        		mov.getProducto().ingreso(mov.getCambioUnidades());
-        	}else {
-        		mov.getProducto().egreso(mov.getCambioUnidades());
-        	}
-    
-        }
-        
-        //paso 6.- preguntar al usuario de que tipo de porducto quiere un reporte final
-        // preguntar por el stock final del producto en cuestión
-            
-        seguir = JOptionPane.showConfirmDialog(null, "Desea verificar algún producto");
-
-        while(seguir==0) {
-            String opc = (String)JOptionPane.showInputDialog(
-                null,
-                "Selecciona una opcion",
-                "Tipo de producto",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                nombresA,
-                nombresA[0]);
-
-            int stockF = Integer.parseInt(JOptionPane.showInputDialog(null, "Cuál es el stock final de este producto"));
-
-            productos.get(opc).setStockFinal(stockF);
-            if(productos.get(opc).esCongruente()) {
-                JOptionPane.showMessageDialog(null, "Los datos son congruentes");
-            } else {
-                JOptionPane.showMessageDialog(null, "Los datos no son congruentes por favor revise su inventario");
-            }
-
-            seguir = JOptionPane.showConfirmDialog(null, "Desea verificar algún producto");
-        }
-
-        //borramos los archivos y lo volvemos a escribir por si el usuario añadió un nuevo producto o un nuevo usuario
+      //borramos los archivos y lo volvemos a escribir por si el usuario añadió un nuevo producto o un nuevo usuario
         File archivoProd = new File("productos.dat");
         archivoProd.delete();
         File archivoEmp = new File("empleados.dat");
@@ -145,8 +70,6 @@ public class AppProyecto1 {
             JOptionPane.showMessageDialog(null, "Error de escritura");
         }
 	}
-
-    // métodos para crear objetos ----------------------------------------------------------------------------------------------
 
     //este método nos sirve para crear un producto (noten que regresa un objeto producto)
     public Producto crearProducto() throws IOException {
@@ -185,7 +108,7 @@ public class AppProyecto1 {
         //leer datos del teclado y esciribilos al archivo
         JLabel lblFecha = new JLabel("Fecha: ");
         JTextField txtFecha = new JTextField();
-        JLabel lblCambio = new JLabel("Cantidad: ");
+        JLabel lblCambio = new JLabel("Cambio: ");
         JTextField txtCambio = new JTextField();
 
         Object[] formato = {lblFecha, txtFecha, lblCambio, txtCambio};
@@ -316,5 +239,4 @@ public class AppProyecto1 {
         oos.close();
     }
 
-    //-------------------------------------------------------------------------------------------------------------------------------------
 }
