@@ -17,6 +17,8 @@ import java.io.ObjectOutputStream;
 public class AppCrearArchivos {
 
 	public static void main(String[] args) {
+		
+		//para crear productos (archivo)
         HashMap<String, Producto> productos = new HashMap<>();
 
         int seguir = JOptionPane.showConfirmDialog(null, "Desea ingresar un producto");
@@ -37,7 +39,7 @@ public class AppCrearArchivos {
             JOptionPane.showMessageDialog(null, "Error de escritura");
         }
 
-
+        // para crear empleados (archivo)
         HashMap<String, Empleado> empleados = new HashMap<>();
 
         seguir = JOptionPane.showConfirmDialog(null, "Desea ingresar un empleado");
